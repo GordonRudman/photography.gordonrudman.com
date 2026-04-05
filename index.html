@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gordon Rudman | Photography</title>
+
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f8f7f3;color:#111;overflow-x:hidden}
+.container{max-width:1100px;margin:auto;padding:20px}
+
+/* Video hero */
+.hero-video{position:relative;width:100%;height:60vh;overflow:hidden;border-radius:20px;margin-bottom:30px}
+.hero-video video{width:100%;height:100%;object-fit:cover}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.6),transparent);display:flex;flex-direction:column;justify-content:center;align-items:center;color:#fff;text-align:center}
+.hero-overlay h1{font-size:3rem;margin:0}
+.hero-overlay p{font-size:1.2rem;margin-top:10px}
+
+/* Masonry gallery */
+.gallery{column-count:3;column-gap:12px}
+.gallery-item{position:relative;margin-bottom:12px;cursor:pointer;transition:transform .5s ease;background:#ddd;min-height:200px;display:flex;align-items:center;justify-content:center}
+.gallery-item img{width:100%;border-radius:8px;display:block;box-shadow:0 6px 20px rgba(0,0,0,0.15);opacity:0;transition:opacity .5s ease}
+.overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.6),transparent);color:#fff;border-radius:12px;opacity:0;display:flex;flex-direction:column;justify-content:flex-end;padding:10px;transition:.3s}
+.gallery-item:hover .overlay{opacity:1}
+@media(max-width:900px){.gallery{column-count:2}}
+@media(max-width:600px){.gallery{column-count:1}}
+
+/* Lightbox cinematic */
+.lightbox{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:none;align-items:center;justify-content:center;z-index:1000;transition:opacity .5s ease}
+.lightbox img{max-width:95%;max-height:95%;border-radius:12px;transition:transform .6s ease}
+
+/* Contact */
+.contact{background:#fff;padding:20px;border-radius:20px;box-shadow:0 8px 20px rgba(0,0,0,.15);text-align:center}
+.contact-form{display:grid;gap:10px;margin-top:10px}
+.contact input{padding:10px;border-radius:8px;border:1px solid #ccc}
+.contact button{padding:10px;border:none;border-radius:8px;background:#2d6a4f;color:#fff;cursor:pointer}
+.contact button:hover{background:#1b4332}
+@media(min-width:768px){.contact-form{grid-template-columns:1fr 1fr auto}}
+
+/* Small Calendly */
+.booking{margin:20px 0;max-width:600px;height:350px;margin:auto;border-radius:12px;overflow:hidden}
+.booking iframe{width:100%;height:100%;border:none}
+
+/* Scroll animations */
+.fade{opacity:0;transform:translateY(20px);transition:.6s}
+.fade.show{opacity:1;transform:none}
+
+.footer{text-align:center;color:#aaa;margin-top:40px}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero-video fade">
+    <!-- <video autoplay muted loop playsinline>
+      <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+    </video> -->
+    <img src="https://photography.gordonrudman.com/photos/File 00051.webp" id="hero-img" style="width:100%;height:100%;object-fit:cover;">
+    <div class="hero-overlay">
+      <h1>Gordon Rudman</h1>
+      <p>Photography</p>
+    </div>
+  </div>
+
+  <!-- Gallery -->
+  <div class="gallery" id="gallery"></div>
+
+  <!-- Contact -->
+  <!-- <div class="contact fade">
+    <h3>Book a Session</h3>
+    <div class="contact-form">
+      <input id="name" placeholder="Your Name">
+      <input id="email" placeholder="Your Email">
+      <button id="btn">Book Now</button>
+    </div>
+    <p id="msg"></p>
+
+    <div class="booking fade">
+      <iframe src="https://calendly.com/your-calendly-link" title="Book a session"></iframe>
+    </div>
+  </div> -->
+
+  <div class="footer">© 2026 Gordon Rudman Photography</div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox"><img id="lightbox-img"></div>
+
+<script>
+
+/* PREVENT DOWNLOAD */
+document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("dragstart", e => e.preventDefault());
+
+
+// Scroll animations
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('show'); });
+});
+document.querySelectorAll('.fade').forEach(el => observer.observe(el));
+
+// Gallery image list 
+const totalImages = 63; // total number of images you have
+var host = window.location.origin;
+// const images = Array.from({ length: totalImages }, (_, i) => 
+// {
+//   const num = String(i + 1).padStart(5, '0');
+//   return `${host}/photos/File ${num}.jpg`;
+// });
+ 
+// Step 1: create sequential array of numbers
+const numbers = Array.from({ length: totalImages }, (_, i) => i + 1);
+
+// Step 2: shuffle using Fisher-Yates
+for (let i = numbers.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+}
+
+// Step 3: create array of image paths
+const images = numbers.map(num => `${host}/photos/File ${String(num).padStart(5, '0')}.webp`);
+
+
+const gallery = document.getElementById('gallery');
+images.forEach(src => {
+  const div = document.createElement('div');
+  div.className = 'gallery-item';
+  const img = document.createElement('img');
+  img.src = src;
+  img.onload = () => img.style.opacity = '1';
+  div.appendChild(img);
+  const ov = document.createElement('div');
+  ov.className = 'overlay';
+  // ov.innerHTML = '<strong>Photo</strong><span>Artistic / Mood</span>';
+  div.appendChild(ov);
+  gallery.appendChild(div);
+});
+
+// Lightbox & swipe
+const lb = document.getElementById('lightbox');
+const lbImg = document.getElementById('lightbox-img');
+let allImgs = [...document.querySelectorAll('.gallery img')];
+let idx = 0;
+allImgs.forEach((img,i) => { img.onclick = () => { idx = i; show(); }; });
+function show(){ lb.style.display='flex'; lbImg.src = allImgs[idx].src; }
+lb.onclick = () => lb.style.display='none';
+
+let startX=0;
+lb.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+lb.addEventListener('touchend', e => {
+  let diff = e.changedTouches[0].clientX - startX;
+  if(diff>50){ idx=(idx-1+allImgs.length)%allImgs.length; show(); }
+  if(diff<-50){ idx=(idx+1)%allImgs.length; show(); }
+});
+
+// Form submit
+document.getElementById('btn').onclick = () => {
+  const n = document.getElementById('name').value.trim();
+  const em = document.getElementById('email').value.trim();
+  const msg = document.getElementById('msg');
+  if(!n) return msg.textContent = 'Enter your name';
+  if(!em.includes('@')) return msg.textContent = 'Enter a valid email';
+  msg.textContent = 'Sending...';
+  fetch('https://your-api-endpoint.com/book', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({name:n,email:em})
+  })
+  .then(() => msg.textContent='Thanks! I will contact you soon.')
+  .catch(() => msg.textContent='Error submitting.');
+};
+
+</script>
+
+</body>
+</html>
