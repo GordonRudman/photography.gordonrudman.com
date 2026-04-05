@@ -1,2 +1,1 @@
 # photography.gordonrudman.com
- 
