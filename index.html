@@ -57,7 +57,7 @@ body{margin:0;font-family:Arial,sans-serif;background:#f8f7f3;color:#111;overflo
     <!-- <video autoplay muted loop playsinline>
       <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
     </video> -->
-    <img src="https://photography.gordonrudman.com/photos/File 00051.webp" id="hero-img" style="width:100%;height:100%;object-fit:cover;">
+    <img alt="hero" src="https://photography.gordonrudman.com/photos/hero.webp" id="hero-img" style="width:100%;height:100%;object-fit:cover;">
     <div class="hero-overlay">
       <h1>Gordon Rudman</h1>
       <p>Photography</p>
@@ -67,6 +67,11 @@ body{margin:0;font-family:Arial,sans-serif;background:#f8f7f3;color:#111;overflo
   <!-- Gallery -->
   <div class="gallery" id="gallery"></div>
 
+  <div class="gallery" id="me">
+    <div class="gallery-item">
+      <img alt="me" src="https://photography.gordonrudman.com/photos/me.webp">
+    </div>
+  </div>
   <!-- Contact -->
   <!-- <div class="contact fade">
     <h3>Book a Session</h3>
@@ -100,13 +105,14 @@ document.addEventListener("dragstart", e => e.preventDefault());
 
 
 // Scroll animations
-const observer = new IntersectionObserver(entries => {
+const observer = new IntersectionObserver(entries => 
+{
   entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('show'); });
 });
 document.querySelectorAll('.fade').forEach(el => observer.observe(el));
 
 // Gallery image list 
-const totalImages = 61; // total number of images you have
+const totalImages = 60; // total number of images you have
 var host = window.location.origin;
 // const images = Array.from({ length: totalImages }, (_, i) => 
 // {
@@ -124,8 +130,7 @@ for (let i = numbers.length - 1; i > 0; i--) {
 }
 
 // Step 3: create array of image paths
-const images = numbers.map(num => `${host}/photos/File ${String(num).padStart(5, '0')}.webp`);
-
+const images = numbers.map(num => `${host}/photos/photo${String(num).padStart(5, '0')}.webp`);
 
 const gallery = document.getElementById('gallery');
 images.forEach(src => {
