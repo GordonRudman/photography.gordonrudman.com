@@ -83,10 +83,8 @@ thumbPaths.forEach((path, index) => {
   const image = document.createElement('img');
   image.src = path;
   image.dataset.full = fullPaths[index];
-  if (index >= 6) image.loading = 'lazy';
+  if (index >= 10) image.loading = 'lazy';
 
-  // Set aspect-ratio so the browser reserves the correct vertical
-  // space before the image loads — no jarring layout shift.
   const [width, height] = IMAGE_DIMENSIONS[pad3(imageNumbers[index])];
   image.style.aspectRatio = `${width} / ${height}`;
 
