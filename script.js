@@ -36,8 +36,15 @@ for (let i = imageNumbers.length - 1; i > 0; i--) {
   [imageNumbers[i], imageNumbers[randomIndex]] = [imageNumbers[randomIndex], imageNumbers[i]];
 }
 
-// Convert the shuffled numbers into full image file paths.
-const imagePaths = imageNumbers.map((number) => {
+// Build two sets of paths for each photo:
+//   - thumbPath: a small 400px-wide AVIF for the gallery grid
+//   - fullPath:  the original WEBP, loaded only when the lightbox opens
+const thumbPaths = imageNumbers.map((number) => {
+  const paddedNumber = String(number).padStart(5, '0');
+  return `${siteOrigin}/thumbs/photo${paddedNumber}.avif`;
+});
+
+const fullPaths = imageNumbers.map((number) => {
   const paddedNumber = String(number).padStart(5, '0');
   return `${siteOrigin}/photos/photo${paddedNumber}.webp`;
 });
@@ -50,12 +57,13 @@ const imagePaths = imageNumbers.map((number) => {
 // photos the visitor can actually see.
 const galleryContainer = document.getElementById('gallery');
 
-imagePaths.forEach((path, index) => {
+thumbPaths.forEach((path, index) => {
   const card = document.createElement('div');
   card.className = 'gallery-item';
 
   const image = document.createElement('img');
   image.src = path;
+  image.dataset.full = fullPaths[index];
   if (index >= 6) image.loading = 'lazy';
   image.addEventListener('load', () => {
     image.style.opacity = '1';
@@ -81,7 +89,8 @@ let currentImageIndex = 0;
 
 function openLightbox() {
   lightbox.style.display = 'flex';
-  lightboxImage.src = allGalleryImages[currentImageIndex].src;
+  const currentImage = allGalleryImages[currentImageIndex];
+  lightboxImage.src = currentImage.dataset.full;
 }
 
 function closeLightbox() {
