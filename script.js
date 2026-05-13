@@ -60,7 +60,7 @@ for (let i = imageNumbers.length - 1; i > 0; i--) {
 //   - fullPath:  the original WEBP, loaded only when the lightbox opens
 const thumbPaths = imageNumbers.map((number) => {
   const paddedNumber = String(number).padStart(5, '0');
-  return `${siteOrigin}/thumbs/photo${paddedNumber}.avif`;
+  return `${siteOrigin}/thumbnails/photo${paddedNumber}.avif`;
 });
 
 const fullPaths = imageNumbers.map((number) => {
