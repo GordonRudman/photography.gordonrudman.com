@@ -43,14 +43,20 @@ const imagePaths = imageNumbers.map((number) => {
 });
 
 // Create each gallery card and insert it into the page.
+//
+// loading="lazy" tells the browser to skip downloading images
+// that are below the fold until the user scrolls near them.
+// This makes the initial page load faster by prioritising the
+// photos the visitor can actually see.
 const galleryContainer = document.getElementById('gallery');
 
-imagePaths.forEach((path) => {
+imagePaths.forEach((path, index) => {
   const card = document.createElement('div');
   card.className = 'gallery-item';
 
   const image = document.createElement('img');
   image.src = path;
+  if (index >= 6) image.loading = 'lazy';
   image.addEventListener('load', () => {
     image.style.opacity = '1';
   });
