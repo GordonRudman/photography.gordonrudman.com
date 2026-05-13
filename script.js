@@ -27,6 +27,25 @@ document.querySelectorAll('.fade').forEach((element) => {
 const TOTAL_IMAGES = 64;
 const siteOrigin = window.location.origin;
 
+// Known dimensions of each original photo (width × height).
+// Setting width + height on <img> lets the browser reserve the
+// correct space before the image loads, preventing layout shift.
+const IMAGE_DIMENSIONS = {
+  "00001":[899,600],"00002":[960,600],"00003":[960,600],"00004":[453,600],"00005":[960,600],
+  "00006":[400,600],"00007":[399,600],"00008":[400,600],"00009":[1012,600],"00010":[1002,600],
+  "00011":[1216,600],"00012":[1131,600],"00013":[900,600],"00014":[900,600],"00015":[365,600],
+  "00016":[870,600],"00017":[960,600],"00018":[960,600],"00019":[960,600],"00020":[400,600],
+  "00021":[960,600],"00022":[960,600],"00023":[960,600],"00024":[960,600],"00025":[960,600],
+  "00026":[960,600],"00027":[960,600],"00028":[960,600],"00029":[960,600],"00030":[960,600],
+  "00031":[965,600],"00032":[399,600],"00033":[900,600],"00034":[900,600],"00035":[900,600],
+  "00036":[429,600],"00037":[900,600],"00038":[1065,600],"00039":[399,600],"00040":[1065,600],
+  "00041":[399,600],"00042":[1067,600],"00043":[400,600],"00044":[1067,600],"00045":[1470,600],
+  "00046":[523,600],"00047":[399,600],"00048":[960,600],"00049":[960,600],"00050":[900,600],
+  "00051":[917,600],"00052":[400,600],"00053":[900,600],"00054":[266,600],"00055":[399,600],
+  "00056":[399,600],"00057":[399,600],"00058":[363,600],"00059":[420,600],"00060":[667,666],
+  "00061":[465,698],"00062":[720,480],"00063":[950,594],"00064":[950,594]
+};
+
 // Create a list of numbers 1 through 64, then shuffle them randomly.
 // This makes the photos appear in a different order every time the page loads.
 const imageNumbers = Array.from({ length: TOTAL_IMAGES }, (_, index) => index + 1);
@@ -65,6 +84,13 @@ thumbPaths.forEach((path, index) => {
   image.src = path;
   image.dataset.full = fullPaths[index];
   if (index >= 6) image.loading = 'lazy';
+
+  // Set aspect-ratio so the browser reserves the correct vertical
+  // space before the image loads — no jarring layout shift.
+  const paddedNumber = imageNumbers[index].toString().padStart(5, '0');
+  const [width, height] = IMAGE_DIMENSIONS[paddedNumber];
+  image.style.aspectRatio = `${width} / ${height}`;
+
   image.addEventListener('load', () => {
     image.style.opacity = '1';
   });
