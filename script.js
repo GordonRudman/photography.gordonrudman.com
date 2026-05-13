@@ -6,23 +6,7 @@ document.addEventListener('dragstart', (event) => event.preventDefault());
 
 
 // ============================================================
-// 2. SCROLL ANIMATIONS
-// ============================================================
-const scrollObserver = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('show');
-    }
-  });
-});
-
-document.querySelectorAll('.fade').forEach((element) => {
-  scrollObserver.observe(element);
-});
-
-
-// ============================================================
-// 3. BUILD THE IMAGE GALLERY
+// 2. BUILD THE IMAGE GALLERY
 // ============================================================
 const TOTAL_IMAGES = 64;
 const siteOrigin = window.location.origin;
@@ -87,10 +71,6 @@ thumbPaths.forEach((path, index) => {
 
   const [width, height] = IMAGE_DIMENSIONS[pad3(imageNumbers[index])];
   image.style.aspectRatio = `${width} / ${height}`;
-
-  image.addEventListener('load', () => {
-    image.style.opacity = '1';
-  });
 
   const overlay = document.createElement('div');
   overlay.className = 'overlay';
