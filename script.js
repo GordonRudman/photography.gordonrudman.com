@@ -59,7 +59,7 @@ for (let i = imageNumbers.length - 1; i > 0; i--) {
 //   - thumbPath: a small 400px-wide AVIF for the gallery grid
 //   - fullPath:  the original WEBP, loaded only when the lightbox opens
 const thumbPaths = imageNumbers.map((number) => {
-  const paddedNumber = String(number - 1).padStart(3, '0');
+  const paddedNumber = String(number).padStart(3, '0');
   return `${siteOrigin}/thumbnails/${paddedNumber}.avif`;
 });
 
