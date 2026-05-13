@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyberpunk — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'JetBrains Mono',monospace;font-weight:300;background:#0a0b10;color:#c0d0e0;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,255,.008) 2px,rgba(0,255,255,.008) 4px);pointer-events:none;z-index:9999}
+.container{max-width:1300px;margin:0 auto;padding:0 20px}
+
+.hero{position:relative;text-align:center;padding:80px 20px 50px;overflow:hidden}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#00ffff,transparent)}
+.hero .glow-line{position:absolute;top:0;left:50%;transform:translateX(-50%);width:200px;height:2px;background:linear-gradient(90deg,transparent,#ff00ff,transparent);filter:blur(4px)}
+.hero h1{font-family:'Orbitron',sans-serif;font-size:2.8rem;font-weight:900;text-transform:uppercase;background:linear-gradient(135deg,#00ffff,#ff00ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.12em;text-shadow:none;filter:drop-shadow(0 0 20px rgba(0,255,255,.3))}
+.hero p{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:#607080;margin-top:8px}
+.hero p span{color:#00ffff}
+.hero .scanline{font-size:.5rem;color:#405060;letter-spacing:.5em;margin-top:16px;font-family:'Orbitron',sans-serif;border-top:1px solid rgba(0,255,255,.1);border-bottom:1px solid rgba(255,0,255,.1);display:inline-block;padding:4px 16px}
+
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;padding:20px 0 60px}
+.gallery-item{position:relative;cursor:pointer;overflow:hidden;background:#0e0f18;border:1px solid rgba(0,255,255,.08);transition:all .3s ease}
+.gallery-item:hover{border-color:#00ffff;box-shadow:0 0 20px rgba(0,255,255,.1),inset 0 0 20px rgba(0,255,255,.02)}
+.gallery-item img{width:100%;display:block;opacity:0;transition:opacity .5s ease;filter:contrast(1.1) saturate(1.1)}
+.gallery-item:hover img{filter:contrast(1.15) saturate(1.2) brightness(1.1)}
+.gallery-item .tag{position:absolute;bottom:0;left:0;right:0;padding:8px 10px;background:rgba(0,255,255,.05);backdrop-filter:blur(4px);font-size:.55rem;color:#00ffff;font-family:'Orbitron',sans-serif;letter-spacing:.1em;opacity:0;transition:.3s;border-top:1px solid rgba(0,255,255,.1)}
+.gallery-item:hover .tag{opacity:1}
+.gallery-item .corner{position:absolute;top:6px;right:6px;width:8px;height:8px;border-top:1px solid #ff00ff;border-right:1px solid #ff00ff;opacity:0;transition:.3s}
+.gallery-item:hover .corner{opacity:1}
+
+.lightbox{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,5,10,.95);display:none;align-items:center;justify-content:center;z-index:1000}
+.lightbox::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,255,255,.02),transparent 70%)}
+.lightbox img{max-width:90vw;max-height:88vh;object-fit:contain;border:1px solid rgba(0,255,255,.1);box-shadow:0 0 40px rgba(0,255,255,.05)}
+.lightbox .nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,255,255,.05);color:#00ffff;border:1px solid rgba(0,255,255,.1);font-size:1.3rem;width:44px;height:44px;cursor:pointer;transition:.2s;font-family:'Orbitron',sans-serif}
+.lightbox .nav:hover{background:rgba(0,255,255,.15);box-shadow:0 0 16px rgba(0,255,255,.1)}
+.lightbox .prev{left:16px}
+.lightbox .next{right:16px}
+.lightbox .close{position:absolute;top:16px;right:20px;background:none;border:none;color:#607080;font-size:1.6rem;cursor:pointer;transition:.2s}
+.lightbox .close:hover{color:#ff00ff}
+.lightbox .counter{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:rgba(0,255,255,.2);font-size:.6rem;letter-spacing:.15em;font-family:'Orbitron',sans-serif}
+
+.footer{text-align:center;padding:40px 0 30px;color:#405060;font-size:.65rem;border-top:1px solid rgba(0,255,255,.06)}
+.footer a{color:#607080;text-decoration:none}
+.footer a:hover{color:#00ffff}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="glow-line"></div>
+    <h1>Gordon Rudman</h1>
+    <p>&#60;<span>photography</span>&#62;</p>
+    <div class="scanline">_SYS.PORTFOLIO_INIT_</div>
+  </div>
+  <div class="gallery" id="gallery"></div>
+  <div class="footer">
+    &copy; 2026 Gordon Rudman &middot; <a href="mailto:photography@gordonrudman.com">photography@gordonrudman.com</a>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="close" id="lb-close">&times;</button>
+  <button class="nav prev" id="lb-prev">&lsaquo;</button>
+  <button class="nav next" id="lb-next">&rsaquo;</button>
+  <img id="lightbox-img">
+  <div class="counter" id="lb-counter"></div>
+</div>
+
+<script>
+const TOTAL=64, siteOrigin=window.location.origin;
+const DIMS={"001":[400,266],"002":[400,250],"003":[400,250],"004":[302,400],"005":[400,250],"006":[266,400],"007":[266,400],"008":[267,400],"009":[400,237],"010":[400,239],"011":[400,197],"012":[400,212],"013":[400,266],"014":[400,266],"015":[243,400],"016":[400,275],"017":[400,250],"018":[400,250],"019":[400,250],"020":[266,400],"021":[400,250],"022":[400,250],"023":[400,250],"024":[400,250],"025":[400,250],"026":[400,250],"027":[400,250],"028":[400,250],"029":[400,250],"030":[400,250],"031":[400,248],"032":[266,400],"033":[400,266],"034":[400,266],"035":[400,266],"036":[286,400],"037":[400,266],"038":[400,225],"039":[266,400],"040":[400,225],"041":[266,400],"042":[400,225],"043":[267,400],"044":[400,225],"045":[400,163],"046":[349,400],"047":[266,400],"048":[400,250],"049":[400,250],"050":[400,266],"051":[400,261],"052":[266,400],"053":[400,266],"054":[177,400],"055":[266,400],"056":[266,400],"057":[266,400],"058":[242,400],"059":[280,400],"060":[400,399],"061":[266,400],"062":[400,266],"063":[400,250],"064":[400,250]};
+const nums=Array.from({length:TOTAL},(_,i)=>i+1);
+for(let i=nums.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[nums[i],nums[j]]=[nums[j],nums[i]]}
+const p3=n=>String(n).padStart(3,'0');
+const thumbs=nums.map(n=>siteOrigin+'/thumbnails/'+p3(n)+'.avif');
+const fulls=nums.map(n=>siteOrigin+'/photos/avif/'+p3(n)+'.avif');
+const gal=document.getElementById('gallery');
+thumbs.forEach((src,i)=>{
+  const c=document.createElement('div');c.className='gallery-item';
+  const img=document.createElement('img');img.src=src;img.dataset.full=fulls[i];if(i>=10)img.loading='lazy';
+  const [w,h]=DIMS[p3(nums[i])];img.style.aspectRatio=w+'/'+h;
+  img.onload=()=>img.style.opacity='1';
+  const t=document.createElement('div');t.className='tag';t.textContent='// '+String(nums[i]).padStart(3,'0');
+  const co=document.createElement('div');co.className='corner';
+  c.append(img,t,co);gal.appendChild(c);
+});
+const lb=document.getElementById('lightbox'),lbi=document.getElementById('lightbox-img'),lbc=document.getElementById('lb-counter');
+const imgs=[...document.querySelectorAll('.gallery img')];let idx=0;
+function open(i){idx=i;lbi.src=imgs[i].dataset.full;lb.style.display='flex';lbc.textContent='['+(i+1)+'/'+imgs.length+']'}
+function close(){lb.style.display='none'}
+function prev(){open((idx-1+imgs.length)%imgs.length)}
+function next(){open((idx+1)%imgs.length)}
+imgs.forEach((img,i)=>img.addEventListener('click',()=>open(i)));
+lb.addEventListener('click',e=>{if(e.target===lb)close()});
+document.getElementById('lb-close').onclick=close;
+document.getElementById('lb-prev').onclick=prev;
+document.getElementById('lb-next').onclick=next;
+document.addEventListener('keydown',e=>{if(lb.style.display!=='flex')return;if(e.key==='Escape')close();if(e.key==='ArrowLeft')prev();if(e.key==='ArrowRight')next()});
+let tx=0;
+lb.addEventListener('touchstart',e=>{tx=e.touches[0].clientX});
+lb.addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-tx;if(d>50)prev();if(d<-50)next()});
+</script>
+</body>
+</html>
